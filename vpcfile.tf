@@ -50,6 +50,7 @@ resource "aws_route_table" "pvt-route" {
   route {
     cidr_block = "0.0.0.0/0"
      gateway_id = aws_nat_gateway.ngw.id
+    destination_cidr_block = aws_vpc.peervpc.cidr_block
     vpc_peering_connection_id = aws_vpc_peering_connection.mypeer.id
   }
   tags = {
@@ -195,6 +196,7 @@ resource "aws_internet_gateway" "igw" {
 
    route {
      cidr_block = "0.0.0.0/0"
+    destination_cidr_block = aws_vpc.myvpc.cidr_block
      vpc_peering_connection_id = aws_vpc_peering_connection.mypeer.id
     
    }
@@ -218,8 +220,8 @@ resource "aws_internet_gateway" "igw" {
 
    ingress {
      description      = "TLS from VPC"
-     from_port        = 22
-     to_port          = 22
+     from_port        = 0
+     to_port          = 65535
      protocol         = "tcp"
      cidr_blocks      = ["0.0.0.0/0"]
      # ipv6_cidr_blocks = [aws_vpc.main.ipv6_cidr_block]
